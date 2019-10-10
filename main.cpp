@@ -12,15 +12,19 @@ struct Point {
 int main() {
     int x, y;
     float xOrigin, yOrigin;
+    float maxX, maxY, minX, minY;
+
     vector<Point> array;
     Point inPoint;
     ifstream input;
-    string inputFileName;
-
-    inputFileName = "input.txt";
+    string inputFileName = "input.txt";
     input.open(inputFileName);
 
-    //Read out line by line
+    cout
+            << "This program reads ordered pairs arranged one-per-line from the file input.txt, and determines if the set is symmetrical"
+            << endl;
+
+    //Read the input stream line by line, assigning values to a Point and storing it
     while (input >> x >> y) {
         printf("%d %d \n", x, y);
         inPoint.x = x;
@@ -29,13 +33,11 @@ int main() {
     }
     input.close();
 
-    float maxX, maxY, minX, minY;
+    //Find the extremes of the pattern
     maxX = array[0].x;
     minX = array[0].x;
     maxY = array[0].y;
     minY = array[0].y;
-
-    //Find corners
     for (int i = 0; i < array.size(); i++) {
         if (array[i].x > maxX) maxX = array[i].x;
         if (array[i].x < minX) minX = array[i].x;
@@ -48,29 +50,27 @@ int main() {
     yOrigin = (minY + maxY) / 2.0f;
     printf("Origin is (%f, %f) \n ", xOrigin, yOrigin);
 
-
     //Iterate through array and test points. I believe I can speed this up significantly with the use of hashmaps and directly checking for pairs, rather than iterating through and testing.
-    for (int i = 0; i < array.size(); i++) {
-
+    for (int i = 0; i < array.size(); i++) {    //for each point
         printf("===ITERATING=== \n");
-        bool vertsymmetry = false;
+        bool vertsymmetry = false;              //reset checks
         bool hrzntlsymmetry = false;
 
         printf("Current point is : (%f %f)\n", array[i].x, array[i].y);
         if (array[i].x == xOrigin) {
-            printf("on horizontal symmetry line \n");
+            printf("Point is on horizontal symmetry line \n");
             hrzntlsymmetry = true;
         }
         if (array[i].y == yOrigin) {
-            printf("on vertical symmetry line \n");
+            printf("Point is on vertical symmetry line \n");
             vertsymmetry = true;
         }
 
-        //Calculate where the points of symmetry are
+        //Calculate where a symmetric pair would be if it exists. A potential pair across the vertical axis has the same X value, but Y value reflected across axis of symmetry ((yOrigin - (array[i].y - yOrigin))
         Point vertTarget = {array[i].x, (yOrigin - (array[i].y - yOrigin))};
         Point horizontalTarget = {(xOrigin - (array[i].x - xOrigin)), array[i].y};
 
-        //Locate the points of symmetry. Yes this is o(n^2) I need to learn HashMaps
+        //Locate the points of symmetry. Can be improved with a Hashmap. Algorithm performance is o(n^2) because of this loop
         for (int j = 0; j < array.size(); j++) {
             printf("checking point %f %f \n", array[j].x, array[j].y);
             if (array[j].x == vertTarget.x && array[j].y == vertTarget.y) {
@@ -87,7 +87,7 @@ int main() {
             }
         }
 
-
+        //Check if point is asymmetric to the rest of the pattern
         if (!(hrzntlsymmetry && vertsymmetry)) {
             printf("asymmetric point found. pattern is asymmetric");
             return 0;
@@ -102,7 +102,7 @@ int main() {
     }
     */
 
-    //if code reaches here, pattern must be symmetric
+    //if code reaches here, all points are symmetric, so pattern must be symmetric
     printf("Set of points is symmetric");
     return 0;
 }
