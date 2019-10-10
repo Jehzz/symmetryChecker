@@ -24,6 +24,12 @@ int main() {
             << "This program reads ordered pairs arranged one-per-line from the file input.txt, and determines if the set is symmetrical"
             << endl;
 
+    if (!input)
+    {
+        cerr << "Could not open input file " << "\n";
+        return 1;
+    }
+
     //Read the input stream line by line, assigning values to a Point and storing it
     while (input >> x >> y) {
         printf("%d %d \n", x, y);
@@ -52,17 +58,17 @@ int main() {
 
     //Iterate through array and test points. I believe I can speed this up significantly with the use of hashmaps and directly checking for pairs, rather than iterating through and testing.
     for (int i = 0; i < array.size(); i++) {    //for each point
-        printf("===ITERATING=== \n");
+        //printf("===ITERATING=== \n");
         bool vertsymmetry = false;              //reset checks
         bool hrzntlsymmetry = false;
 
-        printf("Current point is : (%f %f)\n", array[i].x, array[i].y);
+        //printf("Current point is : (%f %f)\n", array[i].x, array[i].y);
         if (array[i].x == xOrigin) {
-            printf("Point is on horizontal symmetry line \n");
+            //printf("Point is on horizontal symmetry line \n");
             hrzntlsymmetry = true;
         }
         if (array[i].y == yOrigin) {
-            printf("Point is on vertical symmetry line \n");
+            //printf("Point is on vertical symmetry line \n");
             vertsymmetry = true;
         }
 
@@ -72,17 +78,17 @@ int main() {
 
         //Locate the points of symmetry. Can be improved with a Hashmap. Algorithm performance is o(n^2) because of this loop
         for (int j = 0; j < array.size(); j++) {
-            printf("checking point %f %f \n", array[j].x, array[j].y);
+            //printf("checking point %f %f \n", array[j].x, array[j].y);
             if (array[j].x == vertTarget.x && array[j].y == vertTarget.y) {
-                printf("vertically symmetric point found \n");
+                //printf("vertically symmetric point found \n");
                 vertsymmetry = true;
             }
             if (array[j].x == horizontalTarget.x && array[j].y == horizontalTarget.y) {
                 hrzntlsymmetry = true;
-                printf("horizontally symmetric point found \n \n");
+                //printf("horizontally symmetric point found \n \n");
             }
             if (hrzntlsymmetry && vertsymmetry) {
-                printf("point is symmetric \n \n");
+                //printf("point is symmetric \n \n");   //no need to continue scanning, so break
                 break;
             }
         }
@@ -93,14 +99,7 @@ int main() {
             return 0;
         }
 
-
     }
-
-    /*CODE TO TEST THAT ARRAY VALUES ARE CORRECT
-    for (int i = 0; i < array.size(); i++){
-        printf("%d", array[i].y );
-    }
-    */
 
     //if code reaches here, all points are symmetric, so pattern must be symmetric
     printf("Set of points is symmetric");
